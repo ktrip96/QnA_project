@@ -13,6 +13,7 @@ app.listen(PORT, () => console.log(`Server started on port: ${PORT}`));
 app.get("/test", (req, res) => {
   res.send("It works");
 });
+app.use(express.json());
 
 // Connect to mongoDB
 
@@ -26,4 +27,8 @@ mongoose.connect(process.env.MDB_CONNECT,
     console.log('Connected to MongoDB');
   }
 );
+
+// Set up routes
+
+app.use("/auth", require("./routers/userRouter"));
 
