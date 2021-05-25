@@ -61,9 +61,7 @@ router.post('/', async (req, res) => {
       .cookie('token', token, {
         httpOnly: true,
       })
-      .send()
-
-    res.send('Ok!')
+      .send('Congrats')
   } catch (err) {
     console.error(err)
     res.status(500).send()
