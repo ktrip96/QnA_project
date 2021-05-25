@@ -1,6 +1,7 @@
 const User = require('../models/userModel')
-
+const bcrypt = require('bcrypt')
 const router = require('express').Router()
+const jwt = require('jsonwebtoken')
 
 router.post('/', async (req, res) => {
   try {
@@ -28,6 +29,41 @@ router.post('/', async (req, res) => {
       return res.status(400).json({
         errorMessage: 'An account with this email already exists.',
       })
+
+    // Hash the password
+    // Salt is a random string which is generated in order for the password to be hashed
+
+    const salt = await bcrypt.genSalt()
+    const passwordHash = await bcrypt.hash(password, salt)
+
+    // Save the user
+
+    const newUser = new User({
+      email,
+      passwordHash,
+    })
+    const savedUser = await newUser.save()
+
+    // Log the user in
+
+    const token = jwt.sign(
+      {
+        user: savedUser._id,
+      },
+      process.env.JWT_SECRET
+    )
+
+    console.log({ token })
+
+    // send the token in a HTTP only cookie
+
+    res
+      .cookie('token', token, {
+        httpOnly: true,
+      })
+      .send()
+
+    res.send('Ok!')
   } catch (err) {
     console.error(err)
     res.status(500).send()
