@@ -123,4 +123,17 @@ router.post('/logout', (req, res) => {
     })
     .send()
 })
+
+router.get('/isLoggedIn', (req, res) => {
+  try {
+    const token = req.cookies.token
+
+    if (!token) return res.send(false)
+    const verified = jwt.verify(token, process.env.JWT_SECRET)
+
+    res.send(true)
+  } catch (err) {
+    res.send(false)
+  }
+})
 module.exports = router
