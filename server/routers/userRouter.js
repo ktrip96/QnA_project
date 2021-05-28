@@ -53,6 +53,8 @@ router.post('/', async (req, res) => {
       process.env.JWT_SECRET
     )
 
+    console.log('Sign up request')
+
     // send the token in a HTTP only cookie
 
     res

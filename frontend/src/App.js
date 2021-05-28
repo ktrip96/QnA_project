@@ -1,6 +1,11 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
+import Login from './components/Login'
+import Signup from './components/Signup'
 import Navbar from './Navbar'
+import axios from 'axios'
+
+axios.defaults.withCredentials = true
 
 function App() {
   return (
@@ -11,10 +16,10 @@ function App() {
           <div>Home</div>
         </Route>
         <Route path='/signup'>
-          <div>Sign up</div>
+          <Signup />
         </Route>
         <Route path='/login'>
-          <div>Login</div>
+          <Login />
         </Route>
       </Switch>
     </>
