@@ -1,9 +1,21 @@
-import React from 'react'
+import axios from 'axios'
+import React, { useContext } from 'react'
+import AuthContext from '../context/AuthContext'
+import { useHistory } from 'react-router'
 
 export default function Logout() {
-  return (
-    <div>
-      <h1>Log Out Page</h1>
-    </div>
-  )
+  const { getLoggedIn } = useContext(AuthContext)
+  const history = useHistory()
+  // When the user presses Logout:
+  // => I remove the token from the cookies (I can't do it with JS because cookies are HTTP only, so I post to the following URL)
+  // => I need to update my context state from LoggedIn === true to false.
+  // => I need to redirect him to the home page
+
+  async function logOut() {
+    await axios.post('http://localhost:5000/auth/logout')
+    getLoggedIn()
+    history.push('/')
+  }
+
+  return <button onClick={logOut}>Log Out</button>
 }

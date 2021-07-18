@@ -21,7 +21,7 @@ function AuthContextProvider(props) {
   }, [])
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
+    <AuthContext.Provider value={{ isLoggedIn, getLoggedIn }}>
       {props.children}
     </AuthContext.Provider>
   )

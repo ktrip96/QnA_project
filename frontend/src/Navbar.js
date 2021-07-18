@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
+import Logout from './components/Logout'
 import AuthContext from './context/AuthContext'
 
 export default function Navbar() {
@@ -17,7 +18,7 @@ export default function Navbar() {
       {isLoggedIn === true && (
         <>
           <Link to='/myaccount'>My Account</Link>
-          <Link to='/logout'>Log out</Link>
+          <Logout />
         </>
       )}
     </>
