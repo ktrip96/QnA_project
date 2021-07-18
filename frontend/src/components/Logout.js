@@ -13,7 +13,7 @@ export default function Logout() {
 
   async function logOut() {
     await axios.post('http://localhost:5000/auth/logout')
-    getLoggedIn()
+    await getLoggedIn()
     history.push('/')
   }
 

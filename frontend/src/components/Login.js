@@ -18,7 +18,7 @@ export default function Login() {
         password,
       }
       await axios.post('http://localhost:5000/auth/login', registerData)
-      getLoggedIn()
+      await getLoggedIn()
       history.push('/')
     } catch (err) {
       console.error(err.response)
