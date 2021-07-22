@@ -1,11 +1,17 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 export default function AskQuestion() {
+  const [email, setEmail] = useState('')
+
   return (
     <div>
-      <input>Title</input>
-      <input label='Type your question'></input>
-      <input label='enter tags for your question'></input>
+      <h1> Ask a Question Page</h1>
+      <input
+        type='email'
+        placeholder='Type your email'
+        onChange={(e) => setEmail(e.target.value)}
+        value={email}
+      />
     </div>
   )
 }

@@ -7,6 +7,8 @@ import Navbar from './Navbar'
 import axios from 'axios'
 import MyAccount from './components/MyAccount'
 import AuthContext from './context/AuthContext'
+import AskQuestion from './components/AskQuestion'
+import Home from './components/Home'
 
 axios.defaults.withCredentials = true
 
@@ -18,7 +20,7 @@ function App() {
       <Navbar />
       <Switch>
         <Route exact path='/'>
-          <div>Home</div>
+          <Home />
         </Route>
         {isLoggedIn === false && (
           <>
@@ -37,6 +39,9 @@ function App() {
             </Route>
             <Route path='/logout'>
               <Logout />
+            </Route>
+            <Route path='/newQuestion'>
+              <AskQuestion />
             </Route>
           </>
         )}
