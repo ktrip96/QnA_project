@@ -6,15 +6,14 @@ const auth = require('../middleware/auth')
 
 router.post('/add', auth, async (req, res) => {
   try {
-    const { title, description } = req.body
-    const questionUser = req.user
+    const { title, content, questionCreator } = req.body
 
     // access to user id that did the request, through req.user
 
     const newQuestion = new Question({
       title,
-      description,
-      questionUser,
+      content,
+      questionCreator,
     })
 
     const savedQuestion = await newQuestion.save()

@@ -5,11 +5,11 @@ const jwt = require('jsonwebtoken')
 
 router.post('/', async (req, res) => {
   try {
-    const { email, password, passwordVerify } = req.body
+    const { email, username, password, passwordVerify } = req.body
 
     // validation
 
-    if (!email || !password || !passwordVerify)
+    if (!email || !password || !passwordVerify || !username)
       return res
         .status(400)
         .json({ errorMessage: 'Please enter all required fields.' })
@@ -24,10 +24,16 @@ router.post('/', async (req, res) => {
         errorMessage: 'Please enter the same password twice.',
       })
 
-    const existingUser = await User.findOne({ email })
-    if (existingUser)
+    const existingEmail = await User.findOne({ email })
+    if (existingEmail)
       return res.status(400).json({
         errorMessage: 'An account with this email already exists.',
+      })
+
+    const existingUser = await User.findOne({ username })
+    if (existingUser)
+      return res.status(400).json({
+        errorMessage: 'An account with this username already exists.',
       })
 
     // Hash the password
@@ -41,6 +47,7 @@ router.post('/', async (req, res) => {
     const newUser = new User({
       email,
       passwordHash,
+      username,
     })
     const savedUser = await newUser.save()
 
@@ -68,16 +75,16 @@ router.post('/', async (req, res) => {
 
 router.post('/login', async (req, res) => {
   try {
-    const { email, password } = req.body
+    const { password, username } = req.body
 
-    if (!email || !password)
+    if (!username || !password)
       return res
         .status(400)
         .json({ errorMessage: 'Please enter all required fields.' })
 
     // check if the user exists
 
-    const existingUser = await User.findOne({ email })
+    const existingUser = await User.findOne({ username })
 
     // if not return 401
 
