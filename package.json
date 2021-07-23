@@ -1,0 +1,26 @@
+{
+  "name": "qna_project",
+  "version": "1.0.0",
+  "description": "Project for the SaaS Course at NTUA",
+  "scripts": {
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm start",
+    "dev": "concurrently \"npm run server\" \"npm run client\" "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ktrip96/QnA_project.git"
+  },
+  "keywords": [
+    "QnA"
+  ],
+  "author": "Nikolaos Tziris",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ktrip96/QnA_project/issues"
+  },
+  "homepage": "https://github.com/ktrip96/QnA_project#readme",
+  "devDependencies": {
+    "concurrently": "^6.2.0"
+  }
+}
