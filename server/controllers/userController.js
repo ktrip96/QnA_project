@@ -143,4 +143,20 @@ module.exports = {
       res.send(false);
     }
   },
+
+  getUserData: async (req, res) => {
+    const user = await User.findById(req.user);
+
+    // if not return 401
+
+    if (!user) return res.status(401).json({ errorMessage: "Unknown user" });
+    else
+      return res.status(200).json({
+        username: user.username,
+        email: user.email,
+        numberOfQuestions: user.numberOfQuestions,
+        numberOfAnswers: user.numberOfAnswers,
+        numberOfLikes: user.numberOfLikes,
+      });
+  },
 };
