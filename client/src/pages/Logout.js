@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { useContext } from 'react'
 import AuthContext from '../context/AuthContext'
 import { useHistory } from 'react-router'
+import { CgLogOut } from 'react-icons/cg'
 
 export default function Logout() {
   const { getLoggedIn } = useContext(AuthContext)
@@ -17,5 +18,9 @@ export default function Logout() {
     history.push('/')
   }
 
-  return <button onClick={logOut}>Log Out</button>
+  return (
+    <button onClick={logOut}>
+      Log Out <CgLogOut />
+    </button>
+  )
 }

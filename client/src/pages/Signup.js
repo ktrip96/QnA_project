@@ -1,10 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import axios from 'axios'
+import { useHistory } from 'react-router'
+import AuthContext from '../context/AuthContext'
 
 export default function Signup() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [username, setUsername] = useState('')
   const [passwordVerify, setPasswordVerify] = useState('')
+
+  const history = useHistory()
+  const { getLoggedIn } = useContext(AuthContext)
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -12,10 +18,13 @@ export default function Signup() {
       const registerData = {
         email,
         password,
+        username,
         passwordVerify,
       }
       console.log(registerData)
       await axios.post('http://localhost:5000/auth/', registerData)
+      await getLoggedIn()
+      history.push('/')
     } catch (err) {
       console.error(err.response)
     }
@@ -30,6 +39,12 @@ export default function Signup() {
           placeholder='Type your email'
           onChange={(e) => setEmail(e.target.value)}
           value={email}
+        />
+        <input
+          type='username'
+          placeholder='Type your username'
+          onChange={(e) => setUsername(e.target.value)}
+          value={username}
         />
         <input
           type='password'

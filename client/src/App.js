@@ -1,14 +1,14 @@
 import React, { useContext } from 'react'
 import { Route, Switch } from 'react-router-dom'
-import Login from './components/Login'
-import Signup from './components/Signup'
-import Logout from './components/Logout'
+import Login from './pages/Login'
+import Signup from './pages/Signup'
 import Navbar from './Navbar'
 import axios from 'axios'
-import MyAccount from './components/MyAccount'
+import MyAccount from './pages/MyAccount'
 import AuthContext from './context/AuthContext'
-import AskQuestion from './components/AskQuestion'
-import Home from './components/Home'
+import AskQuestion from './pages/AskQuestion'
+import Home from './pages/Home'
+import './App.css'
 
 axios.defaults.withCredentials = true
 
@@ -36,9 +36,6 @@ function App() {
           <>
             <Route path='/myaccount'>
               <MyAccount />
-            </Route>
-            <Route path='/logout'>
-              <Logout />
             </Route>
             <Route path='/newQuestion'>
               <AskQuestion />

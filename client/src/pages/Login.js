@@ -4,7 +4,7 @@ import AuthContext from '../context/AuthContext'
 import { useHistory } from 'react-router'
 
 export default function Login() {
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
   const { getLoggedIn } = useContext(AuthContext)
@@ -14,7 +14,7 @@ export default function Login() {
     e.preventDefault()
     try {
       const registerData = {
-        email,
+        username,
         password,
       }
       await axios.post('http://localhost:5000/auth/login', registerData)
@@ -30,10 +30,10 @@ export default function Login() {
       <h1>Login</h1>
       <form onSubmit={handleSubmit}>
         <input
-          type='email'
-          placeholder='Type your email'
-          onChange={(e) => setEmail(e.target.value)}
-          value={email}
+          type='username'
+          placeholder='Type your username'
+          onChange={(e) => setUsername(e.target.value)}
+          value={username}
         />
         <input
           type='password'
