@@ -10,30 +10,35 @@ module.exports = {
       // validation
 
       if (!email || !password || !passwordVerify || !username)
-        return res
-          .status(400)
-          .json({ errorMessage: "Please enter all required fields." });
+        return res.status(400).json({
+          success: 0,
+          message: "Please enter all required fields.",
+        });
 
       if (password.length < 6)
         return res.status(400).json({
-          errorMessage: "Please enter a password of at least 6 characters.",
+          success: 0,
+          message: "Please enter a password of at least 6 characters.",
         });
 
       if (password !== passwordVerify)
         return res.status(400).json({
-          errorMessage: "Please enter the same password twice.",
+          success: 0,
+          message: "Please enter the same password twice.",
         });
 
       const existingEmail = await User.findOne({ email });
       if (existingEmail)
         return res.status(400).json({
-          errorMessage: "An account with this email already exists.",
+          success: 0,
+          message: "An account with this email already exists.",
         });
 
       const existingUser = await User.findOne({ username });
       if (existingUser)
         return res.status(400).json({
-          errorMessage: "An account with this username already exists.",
+          success: 0,
+          message: "An account with this username already exists.",
         });
 
       // Hash the password
@@ -66,7 +71,7 @@ module.exports = {
         .cookie("token", token, {
           httpOnly: true,
         })
-        .send();
+        .json({ success: 1, message: "User created" });
     } catch (err) {
       console.error(err);
       res.status(500).send();
@@ -80,7 +85,7 @@ module.exports = {
       if (!username || !password)
         return res
           .status(400)
-          .json({ errorMessage: "Please enter all required fields." });
+          .json({ success: 0, message: "Please enter all required fields." });
 
       // check if the user exists
 
@@ -91,7 +96,7 @@ module.exports = {
       if (!existingUser)
         return res
           .status(401)
-          .json({ errorMessage: "Wrong username or password" });
+          .json({ success: 0, message: "Wrong username or password" });
 
       // Else, compare the given password with the stored hashed password
       const passwordCorrect = await bcrypt.compare(
@@ -102,7 +107,7 @@ module.exports = {
       if (!passwordCorrect)
         return res
           .status(401)
-          .json({ errorMessage: "Wrong username or password" });
+          .json({ success: 0, message: "Wrong username or password" });
 
       const token = jwt.sign(
         {
@@ -115,7 +120,7 @@ module.exports = {
         .cookie("token", token, {
           httpOnly: true,
         })
-        .send();
+        .json({ success: 1, message: "Logged In Successfully" });
     } catch (err) {
       console.error(err);
       res.status(500).send();
@@ -128,7 +133,10 @@ module.exports = {
         httpOnly: true,
         expires: new Date(0),
       })
-      .send();
+      .json({
+        success: 1,
+        message: "Logged Out",
+      });
   },
 
   isLoggedIn: (req, res) => {
@@ -148,15 +156,33 @@ module.exports = {
     const user = await User.findById(req.user);
 
     // if not return 401
+    if (!user)
+      return res.status(401).json({ success: 0, message: "Unknown user" });
 
+    return res.status(200).json({
+      success: 1,
+      username: user.username,
+      email: user.email,
+      numberOfQuestions: user.numberOfQuestions,
+      numberOfAnswers: user.numberOfAnswers,
+      numberOfLikes: user.numberOfLikes,
+    });
+  },
+
+  deleteUser: async (req, res) => {
+    const user = await User.findByIdAndDelete(req.user);
+    // if not return 401
     if (!user) return res.status(401).json({ errorMessage: "Unknown user" });
-    else
-      return res.status(200).json({
-        username: user.username,
-        email: user.email,
-        numberOfQuestions: user.numberOfQuestions,
-        numberOfAnswers: user.numberOfAnswers,
-        numberOfLikes: user.numberOfLikes,
+    // logout
+    return res
+      .cookie("token", "", {
+        httpOnly: true,
+        expires: new Date(0),
+      })
+      .status(200)
+      .json({
+        success: 1,
+        message: "User deleted successfully",
       });
   },
 };
