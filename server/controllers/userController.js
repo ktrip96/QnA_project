@@ -161,11 +161,13 @@ module.exports = {
 
     return res.status(200).json({
       success: 1,
-      username: user.username,
-      email: user.email,
-      numberOfQuestions: user.numberOfQuestions,
-      numberOfAnswers: user.numberOfAnswers,
-      numberOfLikes: user.numberOfLikes,
+      data: {
+        username: user.username,
+        email: user.email,
+        numberOfQuestions: user.numberOfQuestions,
+        numberOfAnswers: user.numberOfAnswers,
+        numberOfLikes: user.numberOfLikes,
+      },
     });
   },
 
