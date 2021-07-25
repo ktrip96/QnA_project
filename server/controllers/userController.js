@@ -191,7 +191,7 @@ module.exports = {
   updateUser: async (req, res) => {
     try {
       const user = await User.findById(req.user);
-      const { email, username, oldPassword, password, passwordVerify } =
+      let { email, username, oldPassword, password, passwordVerify } =
         req.body;
 
       // validation
