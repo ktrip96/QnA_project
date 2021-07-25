@@ -187,4 +187,110 @@ module.exports = {
         message: "User deleted successfully",
       });
   },
+
+  updateUser: async (req, res) => {
+    try {
+      const user = await User.findById(req.user);
+      const { email, username, oldPassword, password, passwordVerify } =
+        req.body;
+
+      // validation
+      if (!email) email = user.email;
+      if (!username) username = user.username;
+      if (!oldPassword) {
+        return res.status(400).json({
+          success: 0,
+          message: "Please enter your password.",
+        });
+      }
+
+      // Compare the given password with the stored hashed password
+      const passwordCorrect = await bcrypt.compare(
+        oldPassword,
+        user.passwordHash
+      );
+
+      if (!passwordCorrect) {
+        return res.status(400).json({ success: 0, message: "Wrong Password" });
+      }
+
+      // if the user wants to change his email we check if there is another account
+      // with that email
+      if (email !== user.email) {
+        const existingEmail = await User.findOne({ email });
+        if (existingEmail)
+          return res.status(400).json({
+            success: 0,
+            message: "An account with this email already exists.",
+          });
+      }
+
+      // if the user wants to change his username we check if there is another account
+      // with that username
+      if (username !== user.username) {
+        const existingUser = await User.findOne({ username });
+        if (existingUser)
+          return res.status(400).json({
+            success: 0,
+            message: "An account with this username already exists.",
+          });
+      }
+
+      if (password && !passwordVerify) {
+        return res.status(400).json({
+          success: 0,
+          message: "Please enter the password verification",
+        });
+      }
+
+      if (passwordVerify && !password) {
+        return res.status(400).json({
+          success: 0,
+          message:
+            "You've entered the password verification but not the password",
+        });
+      }
+
+      if (password && passwordVerify) {
+        // new password
+        if (password.length < 6) {
+          return res.status(400).json({
+            success: 0,
+            message: "Please enter a password of at least 6 characters.",
+          });
+        }
+
+        if (password !== passwordVerify) {
+          return res.status(400).json({
+            success: 0,
+            message: "Please enter the same password twice.",
+          });
+        }
+
+        // Hash the password
+        // Salt is a random string which is generated in order for the password to be hashed
+
+        const salt = await bcrypt.genSalt();
+        const passwordHash = await bcrypt.hash(password, salt);
+
+        // find and update the user
+
+        await User.findByIdAndUpdate(req.user, {
+          email: email,
+          passwordHash: passwordHash,
+          username: username,
+        }, {useFindAndModify: false});
+      } else {
+        // no new password
+        await User.findByIdAndUpdate(req.user, {
+          email: email,
+          username: username,
+        }, {useFindAndModify: false});
+      }
+      res.json({ success: 1, message: "User Updated Successfully" });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send();
+    }
+  },
 };
