@@ -3,7 +3,7 @@ import axios from 'axios'
 import { useHistory } from 'react-router'
 import AuthContext from '../context/AuthContext'
 import styled from 'styled-components'
-import { Input, Button } from '@chakra-ui/react'
+import { Input, Button, useToast } from '@chakra-ui/react'
 
 const SignUpWrapper = styled.div`
   display: flex;
@@ -49,6 +49,7 @@ export default function Signup() {
 
   const history = useHistory()
   const { getLoggedIn } = useContext(AuthContext)
+  const toast = useToast()
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -63,9 +64,23 @@ export default function Signup() {
       await axios.post('http://localhost:5000/auth/', registerData)
       await getLoggedIn()
       history.push('/')
+      toast({
+        title: 'User successfully created',
+        description: `Welcome dear ${username}!`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
       setIsLoading(false)
     } catch (err) {
-      console.error(err.response)
+      setIsLoading(false)
+      toast({
+        title: 'Warning',
+        description: `${err.response.data.message}`,
+        status: 'warning',
+        duration: 3000,
+        isClosable: true,
+      })
     }
   }
 
