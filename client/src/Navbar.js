@@ -3,11 +3,13 @@ import { Link } from 'react-router-dom'
 import axios from 'axios'
 import AuthContext from './context/AuthContext'
 import { ImHome } from 'react-icons/im'
-import { CgProfile, CgLogIn, CgUserAdd, CgLogOut } from 'react-icons/cg'
+import { CgProfile, CgLogIn, CgLogOut } from 'react-icons/cg'
 import styled from 'styled-components'
+import AddNewQuestion from './components/AddNewQuestion'
 
 export default function Navbar() {
-  const { isLoggedIn, getLoggedIn } = useContext(AuthContext)
+  const { isLoggedIn, getLoggedIn, setUsernameContext } =
+    useContext(AuthContext)
   const [page, setPage] = useState('')
 
   useEffect(() => {
@@ -26,6 +28,7 @@ export default function Navbar() {
     await axios.post('http://localhost:5000/auth/logout')
     await getLoggedIn()
     setPage('')
+    setUsernameContext('')
   }
 
   // Styling
@@ -50,29 +53,33 @@ export default function Navbar() {
     overflow: hidden;
     position: absolute;
 
-    right: 17%;
+    right: 18%;
+    top: 2%;
     display: flex;
     width: 65%;
-    justify-content: space-around;
-    margin: 10px;
+    justify-content: ${page === 'login' ? 'center' : 'space-around'};
+    padding: 10px;
   `
 
   return (
     <NavbarStyle>
       <StyledLink to='/'>
-        <ImHome style={{ fontSize: 25 }} onClick={() => setPage('')} />
+        <ImHome
+          style={{ fontSize: 25, marginTop: 0 }}
+          onClick={() => setPage('')}
+        />
       </StyledLink>
-      {isLoggedIn === false && (
+      {isLoggedIn === false && page !== 'login' && (
         <>
+          <div style={{ marginTop: 5 }}>
+            <AddNewQuestion />
+          </div>
           <StyledLink to='/login' onClick={() => setPage('login')}>
-            Login <CgLogIn />
-          </StyledLink>
-          <StyledLink to='/signup' onClick={() => setPage('signup')}>
-            Signup <CgUserAdd />
+            <CgLogIn style={{ fontSize: 25, marginTop: 10 }} />
           </StyledLink>
         </>
       )}
-      {isLoggedIn === true && (
+      {isLoggedIn === true && page !== 'login' && (
         <>
           <StyledLink to='/myaccount' onClick={() => setPage('myaccount')}>
             <CgProfile style={{ fontSize: 28 }} />

@@ -45,7 +45,7 @@ export default function Login() {
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  const { getLoggedIn } = useContext(AuthContext)
+  const { getLoggedIn, setUsernameContext } = useContext(AuthContext)
   const history = useHistory()
   const toast = useToast()
 
@@ -68,6 +68,8 @@ export default function Login() {
         isClosable: true,
       })
       setIsLoading(false)
+      setUsernameContext(username)
+      window.location.reload()
     } catch (err) {
       setIsLoading(false)
       toast({

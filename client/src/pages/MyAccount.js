@@ -38,7 +38,7 @@ export default function MyAccount() {
   return (
     <>
       <Background>
-        <ProfileImage size={150} marginT={70} marginB={20} />
+        <ProfileImage size={150} marginT={90} marginB={20} />
         <b>
           <h4>ktrip96</h4>
         </b>
