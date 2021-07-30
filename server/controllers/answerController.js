@@ -47,23 +47,25 @@ module.exports = {
     try {
       const id = req.params.id;
       const answer = await QnA.aggregate([
-        { "$match": { "answers._id": mongoose.Types.ObjectId(id) } },
-        { "$project": { _id: 0, answers: 1 } },
-        { "$unwind": "$answers" },
+        { $match: { "answers._id": mongoose.Types.ObjectId(id) } },
+        { $project: { _id: 0, answers: 1 } },
+        { $unwind: "$answers" },
         {
-          "$project": {
-            "_id": "$answers._id",
-            "likes": "$answers.likes",
-            "creator": "$answers.creator",
-            "content": "$answers.content",
-            "date": "$answers.date",
+          $project: {
+            _id: "$answers._id",
+            likes: "$answers.likes",
+            creator: "$answers.creator",
+            content: "$answers.content",
+            date: "$answers.date",
           },
         },
       ]);
-      if (!answer)
+
+      if (answer.length != 1)
         return res
           .status(401)
-          .json({ success: 0, message: "Unknown Answer id" }); 
+          .json({ success: 0, message: "Unknown Answer id" });
+
       res.status(200).json({
         success: 1,
         data: {
@@ -73,7 +75,6 @@ module.exports = {
           date: answer[0].date,
           likes: answer[0].likes,
         },
-        // data: { answer },
       });
     } catch (err) {
       console.error(err);
@@ -81,7 +82,7 @@ module.exports = {
     }
   },
 
-  deleteQuestionById: async (req, res) => {
+  deleteAnswerById: async (req, res) => {
     try {
       const user = await User.findById(req.user);
 
@@ -90,26 +91,33 @@ module.exports = {
         return res.status(401).json({ success: 0, message: "Unknown user" });
 
       const id = req.params.id;
-      const question = await QnA.findById(id);
+      const question = await QnA.findOne({ "answers._id": id });
 
       if (!question)
         return res
           .status(401)
           .json({ success: 0, message: "Unknown Question id" });
 
-      if (question.creator != req.user)
+      const index = question.answers.findIndex((e) => {
+        if (e._id == id) {
+          return true;
+        }
+      });
+
+      if (question.answers[index].creator != req.user)
         return res.status(401).json({
           success: 0,
-          message: "You don't have the permissions to delete this question",
+          message: "You don't have the permissions to delete this answer",
         });
 
-      await QnA.findByIdAndDelete(id);
-      user.numberOfQuestions--;
+      question.answers.splice(index, 1);
+      await question.save();
+      user.numberOfAnswers--;
       await user.save();
 
       res.status(200).json({
         success: 1,
-        message: "Question deleted successfully",
+        message: "Answer deleted successfully",
       });
     } catch (err) {
       console.error(err);
