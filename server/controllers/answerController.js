@@ -1,6 +1,7 @@
 const QnA = require("../models/questionModel");
 const User = require("../models/userModel");
 const Likes = require("../models/likesModel");
+const mongoose = require("mongoose");
 
 module.exports = {
   createAnswer: async (req, res) => {
@@ -42,49 +43,37 @@ module.exports = {
     }
   },
 
-  getAllQuestions: async (req, res) => {
-    try {
-      const questions = await QnA.find();
-      res.status(200).json({
-        success: 1,
-        data: questions.map((a) => {
-          return {
-            _id: a._id,
-            title: a.title,
-            keywords: a.keywords,
-            content: a.content,
-            creator: a.creator,
-            date: a.date,
-            likes: a.likes,
-          };
-        }),
-      });
-    } catch (err) {
-      console.error(err);
-      res.status(500).send();
-    }
-  },
-
-  getQuestionById: async (req, res) => {
+  getAnswerById: async (req, res) => {
     try {
       const id = req.params.id;
-      const question = await QnA.findById(id);
-      if (!question)
+      const answer = await QnA.aggregate([
+        { "$match": { "answers._id": mongoose.Types.ObjectId(id) } },
+        { "$project": { _id: 0, answers: 1 } },
+        { "$unwind": "$answers" },
+        {
+          "$project": {
+            "_id": "$answers._id",
+            "likes": "$answers.likes",
+            "creator": "$answers.creator",
+            "content": "$answers.content",
+            "date": "$answers.date",
+          },
+        },
+      ]);
+      if (!answer)
         return res
           .status(401)
-          .json({ success: 0, message: "Unknown Question id" });
-
+          .json({ success: 0, message: "Unknown Answer id" }); 
       res.status(200).json({
         success: 1,
         data: {
-          _id: question._id,
-          title: question.title,
-          keywords: question.keywords,
-          content: question.content,
-          creator: question.creator,
-          date: question.date,
-          likes: question.likes,
+          _id: answer[0]._id,
+          content: answer[0].content,
+          creator: answer[0].creator,
+          date: answer[0].date,
+          likes: answer[0].likes,
         },
+        // data: { answer },
       });
     } catch (err) {
       console.error(err);
