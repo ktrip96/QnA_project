@@ -1,6 +1,32 @@
 const QnA = require("../models/questionModel");
+const User = require("../models/userModel");
 
 module.exports = {
+  createQuestion: async (req, res) => {
+    try {
+      const { title, content, keywords } = req.body;
+
+      // access to user id that did the request, through req.user
+
+      const newQuestion = new QnA({
+        title: title,
+        content: content,
+        keywords: keywords,
+        creator: req.user,
+      });
+
+      const savedQuestion = await newQuestion.save();
+
+      res.json({
+        success: 1,
+        message: "Question Created",
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send();
+    }
+  },
+
   getAllQuestions: async (req, res) => {
     try {
       const questions = await QnA.find();
@@ -51,24 +77,34 @@ module.exports = {
     }
   },
 
-  createQuestion: async (req, res) => {
+  deleteQuestionById: async (req, res) => {
     try {
-      const { title, content, keywords } = req.body;
+      const user = await User.findById(req.user);
 
-      // access to user id that did the request, through req.user
+      // if not return 401
+      if (!user)
+        return res.status(401).json({ success: 0, message: "Unknown user" });
 
-      const newQuestion = new QnA({
-        title: title,
-        content: content,
-        keywords: keywords,
-        creator: req.user,
-      });
+      const id = req.params.id;
+      const question = await QnA.findById(id);
 
-      const savedQuestion = await newQuestion.save();
+      if (!question)
+        return res
+          .status(401)
+          .json({ success: 0, message: "Unknown Question id" });
+      
 
-      res.json({
+      if (question.creator != req.user)
+        return res.status(401).json({
+          success: 0,
+          message: "You don't have the permissions to delete this question",
+        });
+
+      await QnA.findByIdAndDelete(id);
+
+      res.status(200).json({
         success: 1,
-        message: "Question Created",
+        message: "Question deleted successfully",
       });
     } catch (err) {
       console.error(err);
