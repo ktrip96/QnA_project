@@ -4,7 +4,8 @@ const {
   deleteAnswerById,
   updateAnswerById,
   getLikesById,
-  likeAnswer
+  likeAnswer,
+  unLikeAnswer
 } = require("../controllers/answerController");
 const router = require("express").Router();
 const auth = require("../middleware/auth");
@@ -16,6 +17,6 @@ router.delete("/:id", auth, deleteAnswerById);
 router.put("/:id", auth, updateAnswerById);
 router.get("/:id/likes", auth, getLikesById);
 router.patch("/:id/like", auth, likeAnswer);
-// router.delete("/:id/like", auth, unLikeQuestion);
+router.delete("/:id/like", auth, unLikeAnswer);
 
 module.exports = router;

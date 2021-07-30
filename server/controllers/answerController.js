@@ -271,7 +271,7 @@ module.exports = {
     }
   },
 
-  unLikeQuestion: async (req, res) => {
+  unLikeAnswer: async (req, res) => {
     try {
       const user = await User.findById(req.user);
 
@@ -280,17 +280,23 @@ module.exports = {
         return res.status(401).json({ success: 0, message: "Unknown user" });
 
       const id = req.params.id;
-      const question = await QnA.findById(id);
+      const question = await QnA.findOne({ "answers._id": id });
 
       if (!question)
         return res
           .status(401)
-          .json({ success: 0, message: "Unknown Question id" });
+          .json({ success: 0, message: "Unknown Answer id" });
 
-      if (question.creator == req.user)
+      const index = question.answers.findIndex((e) => {
+        if (e._id == id) {
+          return true;
+        }
+      });
+
+      if (question.answers[index].creator == req.user)
         return res.status(401).json({
           success: 0,
-          message: "You can't un-like your own question!",
+          message: "You can't un-like your own answer!",
         });
 
       const userLikes = await Likes.findOne({ user: req.user });
@@ -301,10 +307,10 @@ module.exports = {
           message: "You haven't liked this question.",
         });
 
-      const index = userLikes.likes.indexOf(id);
-      if (index > -1) userLikes.likes.splice(index, 1);
+      const likeIndex = userLikes.likes.indexOf(id);
+      if (likeIndex > -1) userLikes.likes.splice(index, 1);
       await userLikes.save();
-      question.likes--;
+      question.answers[index].likes--;
       await question.save();
       user.numberOfLikes--;
       await user.save();
