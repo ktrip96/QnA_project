@@ -176,7 +176,7 @@ module.exports = {
   deleteUser: async (req, res) => {
     const user = await User.findByIdAndDelete(req.user);
     // if not return 401
-    if (!user) return res.status(401).json({ errorMessage: "Unknown user" });
+    if (!user) return res.status(401).json({ success: 0, message: "Unknown user" });
     // logout
     return res
       .cookie("token", "", {

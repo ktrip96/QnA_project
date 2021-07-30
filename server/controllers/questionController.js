@@ -4,7 +4,7 @@ module.exports = {
   getAllQuestions: async (req, res) => {
     try {
       const questions = await QnA.find();
-      res.json({
+      res.status(200).json({
         success: 1,
         data: questions.map((a) => {
           return {
@@ -17,6 +17,33 @@ module.exports = {
             likes: a.likes,
           };
         }),
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send();
+    }
+  },
+
+  getQuestionById: async (req, res) => {
+    try {
+      const id = req.params.id;
+      const question = await QnA.findById(id);
+      if (!question)
+        return res
+          .status(401)
+          .json({ success: 0, message: "Unknown Question id" });
+
+      res.status(200).json({
+        success: 1,
+        data: {
+          _id: question._id,
+          title: question.title,
+          keywords: question.keywords,
+          content: question.content,
+          creator: question.creator,
+          date: question.date,
+          likes: question.likes,
+        },
       });
     } catch (err) {
       console.error(err);
