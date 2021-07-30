@@ -4,14 +4,16 @@ const {
   logout,
   isLoggedIn,
   getUserData,
+  getUserDataById,
   deleteUser,
-  updateUser
+  updateUser,
 } = require("../controllers/userController");
 const router = require("express").Router();
 const auth = require("../middleware/auth");
 
 router.post("/", register);
 router.get("/", auth, getUserData);
+router.get("/:id", auth, getUserDataById);
 router.delete("/", auth, deleteUser);
 router.put("/", auth, updateUser);
 router.post("/login", login);

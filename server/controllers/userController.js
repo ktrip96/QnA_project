@@ -162,6 +162,30 @@ module.exports = {
     return res.status(200).json({
       success: 1,
       data: {
+        _id: user._id,
+        username: user.username,
+        email: user.email,
+        description: user.description,
+        color: user.color,
+        numberOfQuestions: user.numberOfQuestions,
+        numberOfAnswers: user.numberOfAnswers,
+        numberOfLikes: user.numberOfLikes,
+      },
+    });
+  },
+
+  getUserDataById: async (req, res) => {
+    const id = req.params.id;
+    const user = await User.findById(id);
+
+    // if not return 401
+    if (!user)
+      return res.status(401).json({ success: 0, message: "Unknown user" });
+
+    return res.status(200).json({
+      success: 1,
+      data: {
+        _id: user._id,
         username: user.username,
         email: user.email,
         description: user.description,
