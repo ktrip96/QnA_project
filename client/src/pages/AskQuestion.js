@@ -51,6 +51,13 @@ export default function AskQuestion() {
   const [tagValue, setTagValue] = useState('')
   const [tagArray, setTagArray] = useState(['green', 'red', 'yellow', 'random'])
 
+  function handleSubmit(e) {
+    e.preventDefault()
+    const newArray = [...tagArray, tagValue]
+    setTagArray(newArray)
+    setTagValue('')
+  }
+
   return (
     <Wrapper>
       <QuestionBox>
@@ -81,13 +88,15 @@ export default function AskQuestion() {
         <Description>
           Add up to 5 tags to describe what your question is about
         </Description>
-        <Input
-          type='text'
-          placeholder='Type tag here'
-          onChange={(e) => setTagValue(e.target.value)}
-          value={tagValue}
-          mb={3}
-        />
+        <form onSubmit={handleSubmit}>
+          <Input
+            type='text'
+            placeholder='Type tag here'
+            onChange={(e) => setTagValue(e.target.value)}
+            value={tagValue}
+            mb={3}
+          />
+        </form>
         <Box mb={3} style={{ display: 'flex' }}>
           {tagArray.map((i, j) => (
             <Hover>

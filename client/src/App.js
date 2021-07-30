@@ -30,6 +30,9 @@ function App() {
             <Route path='/login'>
               <Login />
             </Route>
+            <Route path='/newQuestion'>
+              <Home />
+            </Route>
           </>
         )}
         {isLoggedIn === true && (
