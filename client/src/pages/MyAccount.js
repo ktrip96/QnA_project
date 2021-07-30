@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import ProfileImage from '../components/ProfileImage'
+import Question from '../components/Question'
 
 const Background = styled.div`
   display: flex;
@@ -30,13 +31,14 @@ const ProfileBox = styled.div`
   @media (max-width: 768px) {
     width: 100%;
   }
+  padding-top: 10px;
 `
 
 export default function MyAccount() {
   return (
     <>
       <Background>
-        <ProfileImage size={150} />
+        <ProfileImage size={150} marginT={70} marginB={20} />
         <b>
           <h4>ktrip96</h4>
         </b>
@@ -44,7 +46,10 @@ export default function MyAccount() {
           I am a software engineer at Google
         </span>
       </Background>
-      <ProfileBox></ProfileBox>
+      <ProfileBox>
+        <Question />
+        <Question />
+      </ProfileBox>
     </>
   )
 }
