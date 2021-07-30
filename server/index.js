@@ -63,3 +63,4 @@ mongoose.connect(
 
 app.use("/auth", require("./routers/userRouter"));
 app.use("/question", require("./routers/questionRouter"));
+app.use("/answer", require("./routers/answerRouter"));

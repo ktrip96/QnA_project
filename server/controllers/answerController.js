@@ -3,7 +3,7 @@ const User = require("../models/userModel");
 const Likes = require("../models/likesModel");
 
 module.exports = {
-  createQuestion: async (req, res) => {
+  createAnswer: async (req, res) => {
     try {
       const user = await User.findById(req.user);
 
@@ -11,22 +11,30 @@ module.exports = {
       if (!user)
         return res.status(401).json({ success: 0, message: "Unknown user" });
 
-      const { title, content, keywords } = req.body;
+      const { content } = req.body;
+      if (!content)
+        return res
+          .status(401)
+          .json({ success: 0, message: "Please provide content" });
 
-      const newQuestion = new QnA({
-        title: title,
-        content: content,
-        keywords: keywords,
+      const id = req.params.id;
+      const question = await QnA.findById(id);
+      if (!question)
+        return res
+          .status(401)
+          .json({ success: 0, message: "Unknown Question id" });
+
+      question.answers.push({
         creator: req.user,
+        content: content,
       });
-
-      await newQuestion.save();
-      user.numberOfQuestions++;
+      await question.save();
+      user.numberOfAnswers++;
       await user.save();
 
       res.status(200).json({
         success: 1,
-        message: "Question Created",
+        message: "Answer Created",
       });
     } catch (err) {
       console.error(err);
