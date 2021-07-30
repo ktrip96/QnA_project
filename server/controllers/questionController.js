@@ -6,8 +6,18 @@ module.exports = {
       const questions = await QnA.find();
       res.json({
         success: 1,
-        data: questions
-      })
+        data: questions.map((a) => {
+          return {
+            _id: a._id,
+            title: a.title,
+            keywords: a.keywords,
+            content: a.content,
+            creator: a.creator,
+            date: a.date,
+            likes: a.likes,
+          };
+        }),
+      });
     } catch (err) {
       console.error(err);
       res.status(500).send();
@@ -29,7 +39,10 @@ module.exports = {
 
       const savedQuestion = await newQuestion.save();
 
-      res.json(savedQuestion);
+      res.json({
+        success: 1,
+        message: "Question Created",
+      });
     } catch (err) {
       console.error(err);
       res.status(500).send();

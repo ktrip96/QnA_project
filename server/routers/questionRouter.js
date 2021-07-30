@@ -7,5 +7,6 @@ const auth = require("../middleware/auth");
 
 router.post("/", auth, createQuestion);
 router.get("/", auth, getAllQuestions);
+router.get("/:id", auth);
 
 module.exports = router;
