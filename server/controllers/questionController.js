@@ -5,6 +5,12 @@ const Likes = require("../models/likesModel");
 module.exports = {
   createQuestion: async (req, res) => {
     try {
+      const user = await User.findById(req.user);
+
+      // if not return 401
+      if (!user)
+        return res.status(401).json({ success: 0, message: "Unknown user" });
+
       const { title, content, keywords } = req.body;
 
       // access to user id that did the request, through req.user
@@ -17,6 +23,8 @@ module.exports = {
       });
 
       await newQuestion.save();
+      user.numberOfQuestions++;
+      await user.save();
 
       res.status(200).json({
         success: 1,
@@ -101,6 +109,8 @@ module.exports = {
         });
 
       await QnA.findByIdAndDelete(id);
+      user.numberOfQuestions--;
+      await user.save();
 
       res.status(200).json({
         success: 1,
