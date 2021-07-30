@@ -92,7 +92,6 @@ module.exports = {
         return res
           .status(401)
           .json({ success: 0, message: "Unknown Question id" });
-      
 
       if (question.creator != req.user)
         return res.status(401).json({
@@ -105,6 +104,60 @@ module.exports = {
       res.status(200).json({
         success: 1,
         message: "Question deleted successfully",
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send();
+    }
+  },
+
+  updateQuestionById: async (req, res) => {
+    try {
+      const user = await User.findById(req.user);
+
+      // if not return 401
+      if (!user)
+        return res.status(401).json({ success: 0, message: "Unknown user" });
+
+      const id = req.params.id;
+      const question = await QnA.findById(id);
+
+      if (!question)
+        return res
+          .status(401)
+          .json({ success: 0, message: "Unknown Question id" });
+
+      if (question.creator != req.user)
+        return res.status(401).json({
+          success: 0,
+          message: "You don't have the permissions to update this question",
+        });
+
+      let { title, keywords, content } = req.body;
+
+      if (!title && !keywords && !content)
+        return res.status(401).json({
+          success: 0,
+          message: "You need to specify at least one field",
+        });
+
+      if (!title) title = question.title;
+      if (!keywords) keywords = question.keywords;
+      if (!content) content = question.content;
+
+      await QnA.findByIdAndUpdate(
+        id,
+        {
+          title: title,
+          keywords: keywords,
+          content: content,
+        },
+        { useFindAndModify: false }
+      );
+
+      res.status(200).json({
+        success: 1,
+        message: "Question updated successfully",
       });
     } catch (err) {
       console.error(err);
