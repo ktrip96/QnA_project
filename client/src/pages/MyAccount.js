@@ -20,6 +20,17 @@ import {
   RadioGroup,
 } from '@chakra-ui/react'
 
+function colorFunction(color) {
+  if (color === 'green')
+    return 'background: rgb(4, 93, 20);background: linear-gradient(0deg, rgba(4, 93, 20, 1) 0%, rgba(84, 230, 9, 1) 100%  );'
+  else if (color === 'blue')
+    return 'background: rgb(30, 134, 147);background: linear-gradient(0deg,rgba(30, 134, 147, 1) 0%,rgba(27, 226, 217, 1) 100%);'
+  else if (color === 'orange')
+    return 'background: rgb(228, 131, 50);background: linear-gradient(0deg,rgba(228, 131, 50, 1) 0%,rgba(230, 204, 52, 1) 100%);'
+  else
+    return 'background: rgb(114, 25, 162);background: linear-gradient(0deg,rgba(114, 25, 162, 1) 0%,rgba(246, 83, 240, 1) 100%);'
+}
+
 const Background = styled.div`
   display: flex;
   border-radius: 10px;
@@ -28,11 +39,7 @@ const Background = styled.div`
   min-height: 22em;
   color: white;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
-  background: rgb(4, 93, 20);
-  background: linear-gradient(
-    0deg,
-    rgba(4, 93, 20, 1) 0%,
-    rgba(84, 230, 9, 1) 100%
+  ${(props) => colorFunction(props.color)}
   );
 `
 
@@ -89,11 +96,13 @@ export default function MyAccount() {
   const [newPassword, setNewPassword] = useState('')
   const [verifiedPassword, setVerifiedPassword] = useState('')
   const [color, setColor] = useState('green')
+  const [description, setDescription] = useState('')
 
   const [changeEmail, setChangeEmail] = useState(false)
   const [changeUsername, setChangeUsername] = useState(false)
   const [changePassword, setChangePassword] = useState(false)
   const [changeColor, setChangeColor] = useState(false)
+  const [changeDescription, setChangeDescription] = useState(false)
 
   const initialRef = React.useRef()
   const finalRef = React.useRef()
@@ -108,6 +117,7 @@ export default function MyAccount() {
         oldPassword,
         newPassword,
         verifiedPassword,
+        color,
       }
       await axios.put('http://localhost:5000/auth/', editData)
       toast({
@@ -134,7 +144,7 @@ export default function MyAccount() {
 
   return (
     <>
-      <Background>
+      <Background color={color}>
         <ProfileImage size={150} marginT={90} marginB={20} />
         <b>ktrip96</b>
         <span style={{ fontWeight: 300, fontFamily: 'Exo', display: 'flex' }}>
@@ -263,6 +273,27 @@ export default function MyAccount() {
                   Purple
                 </Radio>
               </RadioGroup>
+            )}
+            <br />
+            <Button
+              mb={3}
+              textAlign='center'
+              onClick={() => setChangeDescription((prev) => !prev)}
+              colorScheme='green'
+              isFullWidth
+            >
+              Change your description
+            </Button>
+            {changeDescription && (
+              <>
+                <Input
+                  mb={3}
+                  type='text'
+                  onChange={(e) => setDescription(e.target.value)}
+                  value={description}
+                  placeholder='Type a short desciption about your self'
+                />
+              </>
             )}
           </ModalBody>
 
