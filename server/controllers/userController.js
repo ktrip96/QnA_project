@@ -164,6 +164,8 @@ module.exports = {
       data: {
         username: user.username,
         email: user.email,
+        description: user.description,
+        color: user.color,
         numberOfQuestions: user.numberOfQuestions,
         numberOfAnswers: user.numberOfAnswers,
         numberOfLikes: user.numberOfLikes,
@@ -191,12 +193,21 @@ module.exports = {
   updateUser: async (req, res) => {
     try {
       const user = await User.findById(req.user);
-      let { email, username, oldPassword, password, passwordVerify } =
-        req.body;
+      let {
+        email,
+        username,
+        description,
+        color,
+        oldPassword,
+        password,
+        passwordVerify,
+      } = req.body;
 
       // validation
       if (!email) email = user.email;
       if (!username) username = user.username;
+      if (!color) color = user.color;
+      if (!description) description = user.description;
       if (!oldPassword) {
         return res.status(400).json({
           success: 0,
@@ -275,17 +286,29 @@ module.exports = {
 
         // find and update the user
 
-        await User.findByIdAndUpdate(req.user, {
-          email: email,
-          passwordHash: passwordHash,
-          username: username,
-        }, {useFindAndModify: false});
+        await User.findByIdAndUpdate(
+          req.user,
+          {
+            email: email,
+            passwordHash: passwordHash,
+            username: username,
+            color: color,
+            description: description
+          },
+          { useFindAndModify: false }
+        );
       } else {
         // no new password
-        await User.findByIdAndUpdate(req.user, {
-          email: email,
-          username: username,
-        }, {useFindAndModify: false});
+        await User.findByIdAndUpdate(
+          req.user,
+          {
+            email: email,
+            username: username,
+            color: color,
+            description: description
+          },
+          { useFindAndModify: false }
+        );
       }
       res.json({ success: 1, message: "User Updated Successfully" });
     } catch (err) {
