@@ -142,6 +142,7 @@ module.exports = {
   isLoggedIn: (req, res) => {
     try {
       const token = req.cookies.token;
+      
 
       if (!token) return res.send(false);
       jwt.verify(token, process.env.JWT_SECRET);
@@ -200,7 +201,8 @@ module.exports = {
   deleteUser: async (req, res) => {
     const user = await User.findByIdAndDelete(req.user);
     // if not return 401
-    if (!user) return res.status(401).json({ success: 0, message: "Unknown user" });
+    if (!user)
+      return res.status(401).json({ success: 0, message: "Unknown user" });
     // logout
     return res
       .cookie("token", "", {
@@ -317,7 +319,7 @@ module.exports = {
             passwordHash: passwordHash,
             username: username,
             color: color,
-            description: description
+            description: description,
           },
           { useFindAndModify: false }
         );
@@ -329,7 +331,7 @@ module.exports = {
             email: email,
             username: username,
             color: color,
-            description: description
+            description: description,
           },
           { useFindAndModify: false }
         );

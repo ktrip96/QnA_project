@@ -1,5 +1,6 @@
 const QnA = require("../models/questionModel");
 const User = require("../models/userModel");
+const Likes = require("../models/likesModel");
 
 module.exports = {
   createQuestion: async (req, res) => {
@@ -15,9 +16,9 @@ module.exports = {
         creator: req.user,
       });
 
-      const savedQuestion = await newQuestion.save();
+      await newQuestion.save();
 
-      res.json({
+      res.status(200).json({
         success: 1,
         message: "Question Created",
       });
