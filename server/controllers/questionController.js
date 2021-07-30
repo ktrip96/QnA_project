@@ -184,4 +184,69 @@ module.exports = {
       res.status(500).send();
     }
   },
+
+  likeQuestion: async (req, res) => {
+    try {
+      const user = await User.findById(req.user);
+
+      // if not return 401
+      if (!user)
+        return res.status(401).json({ success: 0, message: "Unknown user" });
+
+      const id = req.params.id;
+      const question = await QnA.findById(id);
+
+      if (!question)
+        return res
+          .status(401)
+          .json({ success: 0, message: "Unknown Question id" });
+
+      if (question.creator == req.user)
+        return res.status(401).json({
+          success: 0,
+          message: "You can't like your own question!",
+        });
+
+      const userLikes = await Likes.findOne({ user: req.user });
+
+      if (!userLikes) {
+        const newUserLikes = new Likes({
+          user: req.user,
+          likes: [id],
+        });
+
+        await newUserLikes.save();
+        question.likes++;
+        await question.save();
+        user.numberOfLikes++;
+        await user.save();
+
+        return res.status(200).json({
+          success: 1,
+          message: "Question Liked successfully",
+        });
+      }
+
+      if (userLikes.likes.includes(id))
+        return res.status(401).json({
+          success: 0,
+          message: "You have already liked this question.",
+        });
+
+      userLikes.likes.push(id);
+      await userLikes.save();
+      question.likes++;
+      await question.save();
+      user.numberOfLikes++;
+      await user.save();
+
+      res.status(200).json({
+        success: 1,
+        message: "Question Liked successfully",
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send();
+    }
+  },
 };
