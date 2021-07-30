@@ -193,11 +193,21 @@ module.exports = {
   updateUser: async (req, res) => {
     try {
       const user = await User.findById(req.user);
-      let { email, username, oldPassword, password, passwordVerify } = req.body;
+      let {
+        email,
+        username,
+        description,
+        color,
+        oldPassword,
+        password,
+        passwordVerify,
+      } = req.body;
 
       // validation
       if (!email) email = user.email;
       if (!username) username = user.username;
+      if (!color) color = user.color;
+      if (!description) description = user.description;
       if (!oldPassword) {
         return res.status(400).json({
           success: 0,
@@ -282,6 +292,8 @@ module.exports = {
             email: email,
             passwordHash: passwordHash,
             username: username,
+            color: color,
+            description: description
           },
           { useFindAndModify: false }
         );
@@ -292,6 +304,8 @@ module.exports = {
           {
             email: email,
             username: username,
+            color: color,
+            description: description
           },
           { useFindAndModify: false }
         );
