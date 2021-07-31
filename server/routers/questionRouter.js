@@ -1,5 +1,6 @@
 const {
   getAllQuestions,
+  getAllQuestionsFromUser,
   createQuestion,
   getQuestionById,
   deleteQuestionById,
@@ -13,6 +14,7 @@ const auth = require("../middleware/auth");
 
 router.post("/", auth, createQuestion);
 router.get("/", auth, getAllQuestions);
+router.get("/user", auth, getAllQuestionsFromUser);
 router.get("/:id", auth, getQuestionById);
 router.delete("/:id", auth, deleteQuestionById);
 router.put("/:id", auth, updateQuestionById);

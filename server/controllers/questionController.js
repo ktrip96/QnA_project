@@ -1,6 +1,8 @@
 const QnA = require("../models/questionModel");
 const User = require("../models/userModel");
 const Likes = require("../models/likesModel");
+const mongoose = require("mongoose");
+
 
 module.exports = {
   createQuestion: async (req, res) => {
@@ -37,6 +39,37 @@ module.exports = {
   getAllQuestions: async (req, res) => {
     try {
       const questions = await QnA.find();
+      res.status(200).json({
+        success: 1,
+        data: questions.map((a) => {
+          return {
+            _id: a._id,
+            title: a.title,
+            keywords: a.keywords,
+            content: a.content,
+            creator: a.creator,
+            date: a.date,
+            likes: a.likes,
+          };
+        }),
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send();
+    }
+  },
+
+  getAllQuestionsFromUser: async (req, res) => {
+    try {
+      const user = await User.findById(req.user);
+
+      // if not return 401
+      if (!user)
+        return res.status(401).json({ success: 0, message: "Unknown user" });
+
+      const questions = await QnA.find({
+        creator: mongoose.Types.ObjectId(req.user),
+      });
       res.status(200).json({
         success: 1,
         data: questions.map((a) => {

@@ -1,6 +1,5 @@
 const QnA = require("../models/questionModel");
 const User = require("../models/userModel");
-const Likes = require("../models/likesModel");
 
 module.exports = {
   getAll: async (req, res) => {
