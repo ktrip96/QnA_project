@@ -18,6 +18,6 @@ router.put("/", auth, updateUser);
 router.post("/login", login);
 router.post("/logout", auth, logout);
 router.get("/isLoggedIn", isLoggedIn);
-router.get("/:id", auth, getUserDataById);
+router.get("/:id", getUserDataById);
 
 module.exports = router;
