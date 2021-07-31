@@ -43,6 +43,39 @@ module.exports = {
     }
   },
 
+  getAnswersFromUser: async (req, res) => {
+    try {
+      const user = await User.findById(req.user);
+
+      // if not return 401
+      if (!user)
+        return res.status(401).json({ success: 0, message: "Unknown user" });
+
+      const answers = await QnA.aggregate([
+        { $match: { "answers.creator": mongoose.Types.ObjectId(req.user) } },
+        { $project: { _id: 0, answers: 1 } },
+        { $unwind: "$answers" },
+        {
+          $project: {
+            _id: "$answers._id",
+            likes: "$answers.likes",
+            creator: "$answers.creator",
+            content: "$answers.content",
+            date: "$answers.date",
+          },
+        },
+      ]);
+
+      res.status(200).json({
+        success: 1,
+        data: answers,
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send();
+    }
+  },
+
   getAnswerById: async (req, res) => {
     try {
       const id = req.params.id;
