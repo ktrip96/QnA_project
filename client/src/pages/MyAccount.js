@@ -1,12 +1,15 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import axios from 'axios'
 import styled from 'styled-components'
 import ProfileImage from '../components/ProfileImage'
 import Question from '../components/Question'
 import AuthContext from '../context/AuthContext'
 import { BiEdit } from 'react-icons/bi'
+import { CgSearch } from 'react-icons/cg'
 import { useHistory } from 'react-router'
 import {
+  InputGroup,
+  InputLeftElement,
   Modal,
   ModalOverlay,
   ModalContent,
@@ -70,7 +73,7 @@ const Background = styled.div`
 // );
 
 const ProfileBox = styled.div`
-  height: 65vh;
+  min-height: 65vh;
   border-radius: 40px 40px 0px 0px;
   width: 70%;
   margin: auto;
@@ -90,6 +93,12 @@ const Hover = styled.div`
   }
 `
 
+const QuestionBox = styled.div`
+  width: 80%;
+  margin: auto;
+  padding: 20px;
+`
+
 export default function MyAccount() {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [username, setUsername] = useState('')
@@ -99,6 +108,18 @@ export default function MyAccount() {
   const [verifiedPassword, setVerifiedPassword] = useState('')
   const [color, setColor] = useState('green')
   const [description, setDescription] = useState('')
+  const [questions, setQuestions] = useState([])
+
+  async function getQuestions() {
+    let questionResponse = await axios.get(
+      'http://localhost:5000/question/user/'
+    )
+    setQuestions(questionResponse.data.data)
+  }
+
+  useEffect(() => {
+    getQuestions()
+  }, [])
 
   const [changeEmail, setChangeEmail] = useState(false)
   const [changeUsername, setChangeUsername] = useState(false)
@@ -204,6 +225,19 @@ export default function MyAccount() {
           <h1 style={{ color: 'gray' }}>|</h1>
           <h1>My Answers</h1>
         </div>
+        <QuestionBox>
+          <InputGroup backgroundColor='white'>
+            <InputLeftElement
+              pointerEvents='none'
+              children={<CgSearch color='gray.300' />}
+            />
+            <Input type='tel' placeholder='Search' />
+          </InputGroup>
+          {questions.map((i, j) => (
+            <Question key={j} data={i} />
+          ))}
+        </QuestionBox>
+
         {/* <Question />
         <Question /> */}
       </ProfileBox>

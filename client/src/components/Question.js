@@ -68,7 +68,12 @@ export default function Question({ data }) {
     <div>
       <QuestionBox>
         <UpperLine>
-          <ProfileImage size={50} marginB={0} marginT={0} />
+          <ProfileImage
+            size={50}
+            marginB={0}
+            marginT={0}
+            creator={data.creator}
+          />
           <p style={{ marginTop: 10, marginLeft: 13, fontSize: '1.3em' }}>
             {username}
           </p>
