@@ -48,7 +48,7 @@ export default function Signup() {
   const [isLoading, setIsLoading] = useState(false)
 
   const history = useHistory()
-  const { getLoggedIn } = useContext(AuthContext)
+  const { getLoggedIn, setUserData } = useContext(AuthContext)
   const toast = useToast()
 
   async function handleSubmit(e) {
@@ -63,6 +63,9 @@ export default function Signup() {
       setIsLoading(true)
       await axios.post('http://localhost:5000/auth/', registerData)
       await getLoggedIn()
+      await axios.get('http://localhost:5000/auth').then((response) => {
+        setUserData(response.data.data)
+      })
       history.push('/')
       toast({
         title: 'User successfully created',

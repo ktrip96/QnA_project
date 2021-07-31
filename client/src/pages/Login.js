@@ -45,7 +45,7 @@ export default function Login() {
   const [password, setPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
-  const { getLoggedIn, setUsernameContext } = useContext(AuthContext)
+  const { getLoggedIn, setUserData } = useContext(AuthContext)
   const history = useHistory()
   const toast = useToast()
 
@@ -59,7 +59,15 @@ export default function Login() {
       setIsLoading(true)
       await axios.post('http://localhost:5000/auth/login', registerData)
       await getLoggedIn()
+      await axios
+        .get('http://localhost:5000/auth')
+        .then((response) => {
+          console.log(response.data.data)
+          setUserData(response.data.data)
+        })
+        .catch((error) => console.log(error))
       history.push('/')
+
       toast({
         title: 'Logged In Successfully',
         description: `Welcome dear ${username}`,
@@ -68,7 +76,6 @@ export default function Login() {
         isClosable: true,
       })
       setIsLoading(false)
-      setUsernameContext(username)
       window.location.reload()
     } catch (err) {
       setIsLoading(false)

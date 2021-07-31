@@ -19,10 +19,6 @@ export default function ProfileImage({ size, marginT, marginB }) {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    @media (max-width: 768px) {
-      width: 130px;
-      height: 130px;
-    }
   `
   return <Profile size={size} />
 }

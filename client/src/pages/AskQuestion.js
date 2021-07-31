@@ -1,12 +1,22 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { Input, Button, Textarea, Tag, TagLabel, Box } from '@chakra-ui/react'
+import axios from 'axios'
+import {
+  Input,
+  Button,
+  Textarea,
+  Tag,
+  TagLabel,
+  Box,
+  useToast,
+} from '@chakra-ui/react'
+import { useHistory } from 'react-router-dom'
 
 const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  min-height: 100vh;
 `
 const QuestionBox = styled.div`
   display: flex;
@@ -18,6 +28,11 @@ const QuestionBox = styled.div`
   padding: 30px;
   border-radius: 30px;
   background-color: white;
+
+  @media (max-width: 768px) {
+    width: 80%;
+    margin-top: 60px;
+  }
 `
 
 const Title = styled.h1`
@@ -47,15 +62,37 @@ const Hover = styled.div`
 
 export default function AskQuestion() {
   const [title, setTitle] = useState('')
-  const [body, setBody] = useState('')
+  const [content, setContent] = useState('')
   const [tagValue, setTagValue] = useState('')
-  const [tagArray, setTagArray] = useState(['green', 'red', 'yellow', 'random'])
+  const [tagArray, setTagArray] = useState([])
 
-  function handleSubmit(e) {
+  const toast = useToast()
+  const history = useHistory()
+
+  function handleForm(e) {
     e.preventDefault()
     const newArray = [...tagArray, tagValue]
     setTagArray(newArray)
     setTagValue('')
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault()
+    const keywords = tagArray.join(',')
+    const questionData = { title, content, keywords }
+    try {
+      await axios.post('http://localhost:5000/question', questionData)
+      history.push('/')
+      window.location.reload()
+    } catch (err) {
+      toast({
+        title: 'Error',
+        description: `${err.response.data.message}`,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
   }
 
   return (
@@ -80,24 +117,23 @@ export default function AskQuestion() {
         <Textarea
           type='text'
           size='lg'
-          onChange={(e) => setBody(e.target.value)}
-          value={body}
+          onChange={(e) => setContent(e.target.value)}
+          value={content}
           mb={3}
         />
         <SubTitle>Tags</SubTitle>
         <Description>
           Add up to 5 tags to describe what your question is about
         </Description>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleForm}>
           <Input
             type='text'
             placeholder='Type tag here'
             onChange={(e) => setTagValue(e.target.value)}
             value={tagValue}
-            mb={3}
           />
         </form>
-        <Box mb={3} style={{ display: 'flex' }}>
+        <Box mb={3} style={{ display: 'flex', flexWrap: 'wrap' }}>
           {tagArray.map((i, j) => (
             <Hover>
               <Tag
@@ -105,6 +141,7 @@ export default function AskQuestion() {
                 variant='solid'
                 colorScheme='green'
                 mr={3}
+                mt={3}
                 key={j}
                 onClick={(e) =>
                   setTagArray(
@@ -122,6 +159,7 @@ export default function AskQuestion() {
           style={{ margin: 'auto' }}
           colorScheme='orange'
           color='white'
+          onClick={handleSubmit}
         >
           Submit
         </Button>

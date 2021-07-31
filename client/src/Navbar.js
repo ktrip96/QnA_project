@@ -1,15 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import axios from 'axios'
 import AuthContext from './context/AuthContext'
 import { ImHome } from 'react-icons/im'
-import { CgProfile, CgLogIn, CgLogOut } from 'react-icons/cg'
+import { CgProfile, CgLogIn } from 'react-icons/cg'
 import styled from 'styled-components'
 import AddNewQuestion from './components/AddNewQuestion'
 
 export default function Navbar() {
-  const { isLoggedIn, getLoggedIn, setUsernameContext } =
-    useContext(AuthContext)
+  const { isLoggedIn } = useContext(AuthContext)
   const [page, setPage] = useState('')
 
   useEffect(() => {
@@ -18,18 +16,6 @@ export default function Navbar() {
     if (slashIndex === 0) setPage('')
     else setPage(url.substring(slashIndex))
   }, [])
-
-  // When the user presses Logout:
-  // => I remove the token from the cookies (I can't do it with JS because cookies are HTTP only, so I post to the following URL)
-  // => I need to update my context state from LoggedIn === true to false.
-  // => I need to redirect him to the home page
-
-  async function logOut() {
-    await axios.post('http://localhost:5000/auth/logout')
-    await getLoggedIn()
-    setPage('')
-    setUsernameContext('')
-  }
 
   // Styling
 
@@ -54,7 +40,7 @@ export default function Navbar() {
     position: absolute;
 
     right: 18%;
-    top: 2%;
+    top: 0%;
     display: flex;
     width: 65%;
     justify-content: ${page === 'login' ? 'center' : 'space-around'};
@@ -81,11 +67,11 @@ export default function Navbar() {
       )}
       {isLoggedIn === true && page !== 'login' && (
         <>
+          <div>
+            <AddNewQuestion />
+          </div>
           <StyledLink to='/myaccount' onClick={() => setPage('myaccount')}>
             <CgProfile style={{ fontSize: 28 }} />
-          </StyledLink>
-          <StyledLink to=''>
-            <CgLogOut onClick={logOut} style={{ fontSize: 28 }} />
           </StyledLink>
         </>
       )}

@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import axios from 'axios'
 import styled from 'styled-components'
 import ProfileImage from '../components/ProfileImage'
 import Question from '../components/Question'
+import AuthContext from '../context/AuthContext'
 import { BiEdit } from 'react-icons/bi'
+import { useHistory } from 'react-router'
 import {
   Modal,
   ModalOverlay,
@@ -107,6 +109,8 @@ export default function MyAccount() {
   const initialRef = React.useRef()
   const finalRef = React.useRef()
   const toast = useToast()
+  const history = useHistory()
+  const { getLoggedIn, setUserData, userData } = useContext(AuthContext)
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -117,12 +121,49 @@ export default function MyAccount() {
         oldPassword,
         newPassword,
         verifiedPassword,
+        description,
         color,
       }
       await axios.put('http://localhost:5000/auth/', editData)
       toast({
         title: 'Success',
         description: `User Updated Successfully`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
+      window.location.reload()
+    } catch (err) {
+      toast({
+        title: 'Error',
+        description: `${err.response.data.message}`,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      })
+    }
+  }
+
+  // When the user presses Logout:
+  // => I remove the token from the cookies (I can't do it with JS because cookies are HTTP only, so I post to the following URL)
+  // => I need to update my context state from LoggedIn === true to false.
+  // => I need to redirect him to the home page
+
+  async function logOut() {
+    await axios.post('http://localhost:5000/auth/logout')
+    await getLoggedIn()
+    setUserData({})
+    history.push('/')
+    window.location.reload()
+  }
+
+  async function handleDelete() {
+    try {
+      await logOut()
+      await axios.delete('http://localhost:5000/auth/')
+      toast({
+        title: 'Success',
+        description: `User Deleted Successfully`,
         status: 'success',
         duration: 3000,
         isClosable: true,
@@ -138,17 +179,13 @@ export default function MyAccount() {
     }
   }
 
-  function handleDelete() {
-    console.log('Handle delete')
-  }
-
   return (
     <>
-      <Background color={color}>
+      <Background color={userData.color}>
         <ProfileImage size={150} marginT={90} marginB={20} />
-        <b>ktrip96</b>
+        <b>{userData.username}</b>
         <span style={{ fontWeight: 300, fontFamily: 'Exo', display: 'flex' }}>
-          I am a software engineer at Google{' '}
+          {userData.description}{' '}
           <Hover>
             <BiEdit
               onClick={onOpen}
@@ -162,8 +199,13 @@ export default function MyAccount() {
         </span>
       </Background>
       <ProfileBox>
-        <Question />
-        <Question />
+        <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+          <h1>My Questions</h1>
+          <h1 style={{ color: 'gray' }}>|</h1>
+          <h1>My Answers</h1>
+        </div>
+        {/* <Question />
+        <Question /> */}
       </ProfileBox>
       <Modal
         initialFocusRef={initialRef}
@@ -224,13 +266,6 @@ export default function MyAccount() {
             </Button>
             {changePassword && (
               <>
-                <Input
-                  mb={3}
-                  type='password'
-                  onChange={(e) => setOldPassword(e.target.value)}
-                  value={oldPassword}
-                  placeholder='Type your old password'
-                />
                 <Input
                   mb={3}
                   type='password'
@@ -295,13 +330,20 @@ export default function MyAccount() {
                 />
               </>
             )}
+            <Input
+              mb={3}
+              type='password'
+              onChange={(e) => setOldPassword(e.target.value)}
+              value={oldPassword}
+              placeholder='Type your password'
+            />
           </ModalBody>
 
           <ModalFooter>
             <Button colorScheme='blue' mr={3} onClick={handleSubmit}>
               Save
             </Button>
-            <Button mr={3} colorScheme='orange'>
+            <Button mr={3} colorScheme='orange' onClick={logOut}>
               Logout
             </Button>
             <Button
