@@ -27,7 +27,7 @@ module.exports = {
     }
   },
 
-  getQuestionById: async (req, res) => {
+  getQnAById: async (req, res) => {
     try {
       const id = req.params.id;
       const question = await QnA.findById(id);
@@ -46,6 +46,7 @@ module.exports = {
           creator: question.creator,
           date: question.date,
           likes: question.likes,
+          answers: question.answers
         },
       });
     } catch (err) {
