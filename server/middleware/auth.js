@@ -4,8 +4,7 @@ function auth(req, res, next) {
   try {
     const token = req.cookies.token
 
-    // If you don't have token, then you are not authorized to do the API call\
-
+    // If you don't have token, then you are not authorized to do the API call
     if (!token)
       return res.status(401).json({ success: 0, message: 'Unauthorized' })
 
