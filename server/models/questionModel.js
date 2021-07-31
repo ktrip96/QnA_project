@@ -6,10 +6,10 @@ const AnswerSchema = new mongoose.Schema({
     ref: "user",
     required: true,
   },
-  content: { type: String, required: true },
+  content: { type: String, required: true, index: true },
   likes: { type: Number, default: 0 },
   date: { type: Date, default: Date.now },
-});
+}).index({ content: "text" });
 
 const QuestionSchema = new mongoose.Schema({
   title: { type: String, required: true, unique: true },
