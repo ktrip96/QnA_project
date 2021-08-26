@@ -24,6 +24,7 @@ import {
   Radio,
   RadioGroup,
 } from '@chakra-ui/react'
+import Navbar from '../Navbar'
 
 function colorFunction(color) {
   if (color === 'green')
@@ -202,6 +203,7 @@ export default function MyAccount() {
 
   return (
     <>
+      <Navbar page='myaccount' />
       <Background color={userData.color}>
         <ProfileImage size={150} marginT={90} marginB={20} />
         <b>{userData.username}</b>

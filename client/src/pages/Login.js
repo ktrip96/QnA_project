@@ -4,6 +4,7 @@ import AuthContext from '../context/AuthContext'
 import { useHistory } from 'react-router'
 import styled from 'styled-components'
 import { Input, Button, useToast } from '@chakra-ui/react'
+import Navbar from '../Navbar'
 
 const LoginWrapper = styled.div`
   display: flex;
@@ -62,7 +63,6 @@ export default function Login() {
       await axios
         .get('http://localhost:5000/auth')
         .then((response) => {
-          console.log(response.data.data)
           setUserData(response.data.data)
         })
         .catch((error) => console.log(error))
@@ -76,7 +76,6 @@ export default function Login() {
         isClosable: true,
       })
       setIsLoading(false)
-      window.location.reload()
     } catch (err) {
       setIsLoading(false)
       toast({
@@ -90,45 +89,48 @@ export default function Login() {
   }
 
   return (
-    <LoginWrapper>
-      <LoginBox>
-        <Title>Sign in</Title>
-        <Input
-          variant='outline'
-          placeholder='Type your username'
-          onChange={(e) => setUsername(e.target.value)}
-          value={username}
-          mb={6}
-        />
-        <Input
-          variant='outline'
-          type='password'
-          placeholder='Type your password'
-          onChange={(e) => setPassword(e.target.value)}
-          value={password}
-          mb={6}
-        />
-        <SignUpText onClick={() => history.push('/signup')}>
-          Don't have an account? Sign up
-        </SignUpText>
-        {isLoading ? (
-          <Button
-            colorScheme='teal'
-            isLoading
-            onClick={handleSubmit}
-            size='md'
-          ></Button>
-        ) : (
-          <Button
-            colorScheme='teal'
-            isLoading={false}
-            onClick={handleSubmit}
-            size='md'
-          >
-            Sign In
-          </Button>
-        )}
-      </LoginBox>
-    </LoginWrapper>
+    <>
+      <Navbar page='login' />
+      <LoginWrapper>
+        <LoginBox>
+          <Title>Sign in</Title>
+          <Input
+            variant='outline'
+            placeholder='Type your username'
+            onChange={(e) => setUsername(e.target.value)}
+            value={username}
+            mb={6}
+          />
+          <Input
+            variant='outline'
+            type='password'
+            placeholder='Type your password'
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
+            mb={6}
+          />
+          <SignUpText onClick={() => history.push('/signup')}>
+            Don't have an account? Sign up
+          </SignUpText>
+          {isLoading ? (
+            <Button
+              colorScheme='teal'
+              isLoading
+              onClick={handleSubmit}
+              size='md'
+            ></Button>
+          ) : (
+            <Button
+              colorScheme='teal'
+              isLoading={false}
+              onClick={handleSubmit}
+              size='md'
+            >
+              Sign In
+            </Button>
+          )}
+        </LoginBox>
+      </LoginWrapper>
+    </>
   )
 }

@@ -4,6 +4,7 @@ import { useHistory } from 'react-router'
 import AuthContext from '../context/AuthContext'
 import styled from 'styled-components'
 import { Input, Button, useToast } from '@chakra-ui/react'
+import Navbar from '../Navbar'
 
 const SignUpWrapper = styled.div`
   display: flex;
@@ -89,59 +90,62 @@ export default function Signup() {
   }
 
   return (
-    <SignUpWrapper>
-      <SignUpBox>
-        <Title>Sign Up</Title>
+    <>
+      <Navbar page='login' />
+      <SignUpWrapper>
+        <SignUpBox>
+          <Title>Sign Up</Title>
 
-        <Input
-          type='email'
-          placeholder='Type your email'
-          onChange={(e) => setEmail(e.target.value)}
-          value={email}
-          mb={6}
-        />
-        <Input
-          type='username'
-          placeholder='Type your username'
-          onChange={(e) => setUsername(e.target.value)}
-          value={username}
-          mb={6}
-        />
-        <Input
-          type='password'
-          placeholder='Type your password'
-          onChange={(e) => setPassword(e.target.value)}
-          value={password}
-          mb={6}
-        />
-        <Input
-          type='password'
-          placeholder='Verify your password'
-          onChange={(e) => setPasswordVerify(e.target.value)}
-          value={passwordVerify}
-          mb={6}
-        />
-        <LogInText onClick={() => history.push('/login')}>
-          Already have an account? Sign in
-        </LogInText>
-        {isLoading ? (
-          <Button
-            colorScheme='teal'
-            isLoading
-            onClick={handleSubmit}
-            size='md'
-          ></Button>
-        ) : (
-          <Button
-            colorScheme='teal'
-            isLoading={false}
-            onClick={handleSubmit}
-            size='md'
-          >
-            Sign Up
-          </Button>
-        )}
-      </SignUpBox>
-    </SignUpWrapper>
+          <Input
+            type='email'
+            placeholder='Type your email'
+            onChange={(e) => setEmail(e.target.value)}
+            value={email}
+            mb={6}
+          />
+          <Input
+            type='username'
+            placeholder='Type your username'
+            onChange={(e) => setUsername(e.target.value)}
+            value={username}
+            mb={6}
+          />
+          <Input
+            type='password'
+            placeholder='Type your password'
+            onChange={(e) => setPassword(e.target.value)}
+            value={password}
+            mb={6}
+          />
+          <Input
+            type='password'
+            placeholder='Verify your password'
+            onChange={(e) => setPasswordVerify(e.target.value)}
+            value={passwordVerify}
+            mb={6}
+          />
+          <LogInText onClick={() => history.push('/login')}>
+            Already have an account? Sign in
+          </LogInText>
+          {isLoading ? (
+            <Button
+              colorScheme='teal'
+              isLoading
+              onClick={handleSubmit}
+              size='md'
+            ></Button>
+          ) : (
+            <Button
+              colorScheme='teal'
+              isLoading={false}
+              onClick={handleSubmit}
+              size='md'
+            >
+              Sign Up
+            </Button>
+          )}
+        </SignUpBox>
+      </SignUpWrapper>
+    </>
   )
 }

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext } from 'react'
 import { Link } from 'react-router-dom'
 import AuthContext from './context/AuthContext'
 import { ImHome } from 'react-icons/im'
@@ -6,16 +6,8 @@ import { CgProfile, CgLogIn } from 'react-icons/cg'
 import styled from 'styled-components'
 import AddNewQuestion from './components/AddNewQuestion'
 
-export default function Navbar() {
+export default function Navbar({ page }) {
   const { isLoggedIn } = useContext(AuthContext)
-  const [page, setPage] = useState('')
-
-  useEffect(() => {
-    const url = window.location.href
-    const slashIndex = url.indexOf('/', 10) + 1
-    if (slashIndex === 0) setPage('')
-    else setPage(url.substring(slashIndex))
-  }, [])
 
   // Styling
 
@@ -50,17 +42,14 @@ export default function Navbar() {
   return (
     <NavbarStyle>
       <StyledLink to='/'>
-        <ImHome
-          style={{ fontSize: 25, marginTop: 0 }}
-          onClick={() => setPage('')}
-        />
+        <ImHome style={{ fontSize: 25, marginTop: 0 }} />
       </StyledLink>
       {isLoggedIn === false && page !== 'login' && (
         <>
           <div style={{ marginTop: 5 }}>
             <AddNewQuestion />
           </div>
-          <StyledLink to='/login' onClick={() => setPage('login')}>
+          <StyledLink to='/login'>
             <CgLogIn style={{ fontSize: 25, marginTop: 10 }} />
           </StyledLink>
         </>
@@ -70,7 +59,7 @@ export default function Navbar() {
           <div>
             <AddNewQuestion />
           </div>
-          <StyledLink to='/myaccount' onClick={() => setPage('myaccount')}>
+          <StyledLink to='/myaccount'>
             <CgProfile style={{ fontSize: 28 }} />
           </StyledLink>
         </>

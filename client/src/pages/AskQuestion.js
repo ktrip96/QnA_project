@@ -11,6 +11,7 @@ import {
   useToast,
 } from '@chakra-ui/react'
 import { useHistory } from 'react-router-dom'
+import Navbar from '../Navbar'
 
 const Wrapper = styled.div`
   display: flex;
@@ -96,74 +97,78 @@ export default function AskQuestion() {
   }
 
   return (
-    <Wrapper>
-      <QuestionBox>
-        <Title> Ask a public question</Title>
-        <SubTitle>Title</SubTitle>
-        <Description>
-          Be specific and imagine you’re asking a question to another person
-        </Description>
-        <Input
-          type='text'
-          placeholder='e.g. Is crypto the future of economy?'
-          onChange={(e) => setTitle(e.target.value)}
-          value={title}
-          mb={3}
-        />
-        <SubTitle>Body</SubTitle>
-        <Description>
-          Include all the information someone would need to answer your question
-        </Description>
-        <Textarea
-          type='text'
-          size='lg'
-          onChange={(e) => setContent(e.target.value)}
-          value={content}
-          mb={3}
-        />
-        <SubTitle>Tags</SubTitle>
-        <Description>
-          Add up to 5 tags to describe what your question is about
-        </Description>
-        <form onSubmit={handleForm}>
+    <>
+      <Navbar page='' />
+      <Wrapper>
+        <QuestionBox>
+          <Title> Ask a public question</Title>
+          <SubTitle>Title</SubTitle>
+          <Description>
+            Be specific and imagine you’re asking a question to another person
+          </Description>
           <Input
             type='text'
-            placeholder='Type tag here'
-            onChange={(e) => setTagValue(e.target.value)}
-            value={tagValue}
+            placeholder='e.g. Is crypto the future of economy?'
+            onChange={(e) => setTitle(e.target.value)}
+            value={title}
+            mb={3}
           />
-        </form>
-        <Box mb={3} style={{ display: 'flex', flexWrap: 'wrap' }}>
-          {tagArray.map((i, j) => (
-            <Hover>
-              <Tag
-                borderRadius='full'
-                variant='solid'
-                colorScheme='green'
-                mr={3}
-                mt={3}
-                key={j}
-                onClick={(e) =>
-                  setTagArray(
-                    tagArray.filter((data) => data !== e.target.innerText)
-                  )
-                }
-              >
-                <TagLabel>{i}</TagLabel>
-              </Tag>
-            </Hover>
-          ))}
-        </Box>
-        <Button
-          size='lg'
-          style={{ margin: 'auto' }}
-          colorScheme='orange'
-          color='white'
-          onClick={handleSubmit}
-        >
-          Submit
-        </Button>
-      </QuestionBox>
-    </Wrapper>
+          <SubTitle>Body</SubTitle>
+          <Description>
+            Include all the information someone would need to answer your
+            question
+          </Description>
+          <Textarea
+            type='text'
+            size='lg'
+            onChange={(e) => setContent(e.target.value)}
+            value={content}
+            mb={3}
+          />
+          <SubTitle>Tags</SubTitle>
+          <Description>
+            Add up to 5 tags to describe what your question is about
+          </Description>
+          <form onSubmit={handleForm}>
+            <Input
+              type='text'
+              placeholder='Type tag here'
+              onChange={(e) => setTagValue(e.target.value)}
+              value={tagValue}
+            />
+          </form>
+          <Box mb={3} style={{ display: 'flex', flexWrap: 'wrap' }}>
+            {tagArray.map((i, j) => (
+              <Hover>
+                <Tag
+                  borderRadius='full'
+                  variant='solid'
+                  colorScheme='green'
+                  mr={3}
+                  mt={3}
+                  key={j}
+                  onClick={(e) =>
+                    setTagArray(
+                      tagArray.filter((data) => data !== e.target.innerText)
+                    )
+                  }
+                >
+                  <TagLabel>{i}</TagLabel>
+                </Tag>
+              </Hover>
+            ))}
+          </Box>
+          <Button
+            size='lg'
+            style={{ margin: 'auto' }}
+            colorScheme='orange'
+            color='white'
+            onClick={handleSubmit}
+          >
+            Submit
+          </Button>
+        </QuestionBox>
+      </Wrapper>
+    </>
   )
 }

@@ -3,6 +3,7 @@ import Question from '../components/Question'
 import styled from 'styled-components'
 import { Text, InputGroup, Input, InputLeftElement } from '@chakra-ui/react'
 import { CgSearch } from 'react-icons/cg'
+import Navbar from '../Navbar'
 
 const HomeWrapper = styled.div`
   width: 100%;
@@ -32,24 +33,27 @@ export default function Home() {
   }, [])
 
   return (
-    <HomeWrapper>
-      .
-      <QuestionsWrapper>
-        <Text fontWeight='bold' fontSize='3xl' textAlign='center' mt={75}>
-          Discover
-        </Text>
-        <InputGroup backgroundColor='white'>
-          <InputLeftElement
-            pointerEvents='none'
-            children={<CgSearch color='gray.300' />}
-          />
-          <Input type='tel' placeholder='Search' />
-        </InputGroup>
+    <>
+      <Navbar page='' />
+      <HomeWrapper>
+        .
+        <QuestionsWrapper>
+          <Text fontWeight='bold' fontSize='3xl' textAlign='center' mt={75}>
+            Discover
+          </Text>
+          <InputGroup backgroundColor='white'>
+            <InputLeftElement
+              pointerEvents='none'
+              children={<CgSearch color='gray.300' />}
+            />
+            <Input type='tel' placeholder='Search' />
+          </InputGroup>
 
-        {questions.map((i, j) => (
-          <Question key={j} data={i} />
-        ))}
-      </QuestionsWrapper>
-    </HomeWrapper>
+          {questions.map((i, j) => (
+            <Question key={j} data={i} />
+          ))}
+        </QuestionsWrapper>
+      </HomeWrapper>
+    </>
   )
 }
