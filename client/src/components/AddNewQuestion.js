@@ -26,7 +26,6 @@ export default function AddNewQuestion() {
   function handleClick() {
     if (isLoggedIn) {
       history.push('/newQuestion')
-      window.location.reload()
     } else {
       toast({
         title: 'Warning!',

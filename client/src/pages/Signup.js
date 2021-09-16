@@ -76,7 +76,6 @@ export default function Signup() {
         isClosable: true,
       })
       setIsLoading(false)
-      window.location.reload()
     } catch (err) {
       setIsLoading(false)
       toast({

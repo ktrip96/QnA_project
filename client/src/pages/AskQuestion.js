@@ -84,7 +84,13 @@ export default function AskQuestion() {
     try {
       await axios.post('http://localhost:5000/question', questionData)
       history.push('/')
-      window.location.reload()
+      toast({
+        title: 'Success',
+        description: 'Your question was successfully submitted.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      })
     } catch (err) {
       toast({
         title: 'Error',

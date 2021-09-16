@@ -2,13 +2,13 @@ import React, { useContext } from 'react'
 import { Route, Switch } from 'react-router-dom'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
-import Navbar from './Navbar'
 import axios from 'axios'
 import MyAccount from './pages/MyAccount'
 import AuthContext from './context/AuthContext'
 import AskQuestion from './pages/AskQuestion'
 import Home from './pages/Home'
 import './App.css'
+import Stats from './pages/Stats'
 
 axios.defaults.withCredentials = true
 
@@ -17,10 +17,12 @@ function App() {
 
   return (
     <>
-      {/* <Navbar /> */}
       <Switch>
         <Route exact path='/'>
           <Home />
+        </Route>
+        <Route path='/stats'>
+          <Stats />
         </Route>
         {isLoggedIn === false && (
           <>

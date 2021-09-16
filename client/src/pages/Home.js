@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import Question from '../components/Question'
 import styled from 'styled-components'
-import { Text, InputGroup, Input, InputLeftElement } from '@chakra-ui/react'
+import {
+  Text,
+  InputGroup,
+  Input,
+  InputLeftElement,
+  Button,
+} from '@chakra-ui/react'
 import { CgSearch } from 'react-icons/cg'
 import Navbar from '../Navbar'
+import { useHistory } from 'react-router-dom'
 
 const HomeWrapper = styled.div`
   width: 100%;
@@ -23,6 +30,7 @@ const QuestionsWrapper = styled.div`
 
 export default function Home() {
   const [questions, setQuestions] = useState([])
+  const history = useHistory()
 
   useEffect(() => {
     fetch('http://localhost:5000/question', {
@@ -48,6 +56,23 @@ export default function Home() {
             />
             <Input type='tel' placeholder='Search' />
           </InputGroup>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            <Button
+              onClick={() => history.push('/stats')}
+              colorScheme='green'
+              mt={5}
+              mr={1}
+              size='md'
+              width='150px'
+            >
+              Statistics
+            </Button>
+          </div>
 
           {questions.map((i, j) => (
             <Question key={j} data={i} />
