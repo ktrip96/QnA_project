@@ -1,4 +1,36 @@
-# QnA_project
-## Εργασία για το μάθημα "Τεχνολογίες Υπηρεσιών Λογισμικού"
+# QnA project 💻
+## Team project for "Software as a Service" course 
 
-User Authentication μόνο το server side υλοποιημένο με NodeJs και MongoDb
+#### Description :speech_balloon:: 
+The main purpose of the project, was to build a platform, in which the users can make questions and get answers.
+Somethink like Stackoverflow, Quora etc. There is a main page with the question feed, and a home page, that only registered and logged in users have access to.
+In the main page, the user can see his questions / answers and can edit his profile.
+We use user authentication with JWT token through cookies.
+
+#### To run locally ⚙️:
+clone the project repo
+
+```
+git clone
+npm -i
+cd server
+npm run dev
+cd client
+npm start
+```
+
+#### Technologies Used:
+- **front end**:
+React JS
+
+- **backend**:
+Node JS
+
+- **database**:
+MongoDb
+
+
+
+#### Coming soon:
+- [ ] Deployment to cloud
+- [ ] Video + gifs of the application functionality
