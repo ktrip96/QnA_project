@@ -7,9 +7,13 @@ Somethink like Stackoverflow, Quora etc. There is a main page with the question 
 In the main page, the user can see his questions / answers and can edit his profile.
 We use user authentication with JWT token through cookies.
 
-<img src="qna1.png" width="550" height="300">
-<img src="qna2.png" width="550" height="300">
-<img src="qna3.png" width="200" height="330">
+
+<p float="left">
+  <img src="qna1.png" width="400" />
+
+  <img src="qna2.png" width="400" /> 
+  <img src="qna3.png" width="100" />
+</p>
 
 #### To run locally ⚙️:
 clone the project repo
